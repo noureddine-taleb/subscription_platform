@@ -14,7 +14,7 @@ composer install
 
 ### c. set .env
 
-add the appropriate database and user/password to your .env file. also add redis and email configurations too.
+add the appropriate database and user/password to your .env file. add redis and email configurations. set `QUEUE_CONNECTION` to `database`.
 
 ## to run the app
 
@@ -36,6 +36,13 @@ php artisan db:seed
 php artisan serve
 ```
 
+### d. queue listerner
+
+in a different terminal run:
+```bash
+php artisan queue:listen
+```
+this will run any job asynchronously.
 
 ## Optional
 
