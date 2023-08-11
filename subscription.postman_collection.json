@@ -205,8 +205,46 @@
 		{
 			"name": "new post",
 			"request": {
-				"method": "GET",
-				"header": []
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "title",
+							"value": "sdfk",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "desc",
+							"value": "sdlkf",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "website_id",
+							"value": "1",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/posts",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"posts"
+					]
+				}
 			},
 			"response": []
 		},
