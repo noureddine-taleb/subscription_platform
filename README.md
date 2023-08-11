@@ -14,7 +14,7 @@ composer install
 
 ### c. set .env
 
-add the appropriate database and user/password to your .env file.
+add the appropriate database and user/password to your .env file. also add redis and email configurations too.
 
 ## to run the app
 
