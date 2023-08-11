@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Models\Post;
+use App\Providers\NewPostEvent;
 
 class PostController extends Controller
 {
@@ -25,6 +26,7 @@ class PostController extends Controller
         // input is validated using StorePostRequest::class
         $post = new Post($request->all());
         $post->save();
+        NewPostEvent::dispatch($post);
         return response(status: 201);
     }
 
