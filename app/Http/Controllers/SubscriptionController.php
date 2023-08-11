@@ -22,7 +22,7 @@ class SubscriptionController extends Controller
     public function store(StoreSubscriptionRequest $request)
     {
         // input is validated using StoreSubscriptionRequest::class
-        $subscription = new Subscription($request->all());
+        $subscription = new Subscription($request->only("user_id", "website_id"));
         $subscription->save();
         return response(status: 201);
     }

@@ -45,7 +45,7 @@ class PostController extends Controller
     public function update(UpdatePostRequest $request, Post $post)
     {
         //
-        $post->update($request->intersect('title', 'desc'));
+        $post->update($request->only('title', 'desc'));
     }
 
     /**

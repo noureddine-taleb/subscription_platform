@@ -20,6 +20,6 @@ Route::resource("posts", PostController::class)->except([
     "edit", "create"
 ]);
 
-Route::resource("subscription", SubscriptionController::class)->except([
+Route::resource("subscriptions", SubscriptionController::class)->except([
     "edit", "create", "update"
 ]);
