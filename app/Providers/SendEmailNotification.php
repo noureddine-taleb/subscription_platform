@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Mail\NewPostEmail;
+use App\Models\Notification;
 use App\Models\User;
 use App\Models\Website;
 use App\Providers\NewPostEvent;
@@ -24,13 +25,21 @@ class SendEmailNotification implements ShouldQueue
 
     /**
      * Handle the event.
+     * 
      */
     public function handle(NewPostEvent $event): void
     {
-        $subs = $event->post->website->subs;
-        foreach ($subs as $sub) {
-            error_log("Email is Sent.".$sub->user);
-            Mail::to($sub->user)->send(new NewPostEmail($event->post));
+        /**
+         * new post is create: we send an email here as well asynchronesly
+        */
+        foreach ($event->post->website->subs as $sub) {
+            error_log("Email is Sent to:".$sub->user);
+            // to send real email
+            // Mail::to($sub->user)->send(new NewPostEmail($event->post));
+            $notification = new Notification();
+            $notification->user_id = $sub->user_id;
+            $notification->post_id = $event->post->id;
+            $notification->save();
         }
     }
 }
