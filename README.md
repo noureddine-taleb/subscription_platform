@@ -1,3 +1,21 @@
+## install the app
+
+### a. install
+
+```bash
+git clone git@github.com:noureddine-taleb/subscription_platform.git
+```
+
+### b. install depandencies
+
+```bash
+composer install
+```
+
+### c. set .env
+
+add the appropriate database and user/password to your .env file.
+
 ## to run the app
 
 ### a. create database schema
