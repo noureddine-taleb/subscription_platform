@@ -30,7 +30,7 @@ class SendEmailNotification implements ShouldQueue
     public function handle(NewPostEvent $event): void
     {
         /**
-         * new post is create: we send an email here as well asynchronesly
+         * new post is created: we send an email here as well asynchronesly
         */
         foreach ($event->post->website->subs as $sub) {
             error_log("Email is Sent to:".$sub->user);

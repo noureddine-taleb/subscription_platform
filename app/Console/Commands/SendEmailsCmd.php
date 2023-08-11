@@ -2,10 +2,12 @@
 
 namespace App\Console\Commands;
 
+use App\Mail\NewPostEmail;
 use App\Models\Notification;
 use App\Models\Subscription;
 use App\Models\Website;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Mail;
 
 class SendEmailsCmd extends Command
 {
