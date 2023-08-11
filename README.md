@@ -28,3 +28,7 @@ php artisan app:send-emails
 ```
 
 Note that this only works for the first time it runs. because any other subsequent post created using restapi, will automatically send the email asynchronously.
+
+## Api Doc
+
+in the root folder you will find postman collection file "subscription.postman_collection.json" import it, and have fun !
