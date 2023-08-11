@@ -6,6 +6,7 @@ use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Models\Post;
 use App\Providers\NewPostEvent;
+use Illuminate\Support\Facades\Cache;
 
 class PostController extends Controller
 {
@@ -14,8 +15,14 @@ class PostController extends Controller
      */
     public function index()
     {
-        //
-        return response()->json(Post::all());
+        $posts = [];
+        if (Cache::has("posts")) {
+            $posts = Cache::get("posts");
+        } else {
+            $posts = Post::all();
+            Cache::set("posts", $posts);
+        }
+        return response()->json($posts);
     }
 
     /**
@@ -27,6 +34,7 @@ class PostController extends Controller
         $post = new Post($request->all());
         $post->save();
         NewPostEvent::dispatch($post);
+        Cache::delete("posts");
         return response(status: 201);
     }
 
@@ -45,6 +53,7 @@ class PostController extends Controller
     public function update(UpdatePostRequest $request, Post $post)
     {
         //
+        Cache::delete("posts");
         $post->update($request->only('title', 'desc'));
     }
 
@@ -54,6 +63,7 @@ class PostController extends Controller
     public function destroy(Post $post)
     {
         $post->delete();
+        Cache::delete("posts");
         return response(status:204);
     }
 }

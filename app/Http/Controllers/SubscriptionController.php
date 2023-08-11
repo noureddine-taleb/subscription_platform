@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreSubscriptionRequest;
 use App\Http\Requests\UpdateSubscriptionRequest;
 use App\Models\Subscription;
+use Illuminate\Support\Facades\Cache;
 
 class SubscriptionController extends Controller
 {
@@ -13,7 +14,14 @@ class SubscriptionController extends Controller
      */
     public function index()
     {
-        return response()->json(Subscription::all());
+        $subs = [];
+        if (Cache::has("subs")) {
+            $subs = Cache::get("subs");
+        } else {
+            $subs = Subscription::all();
+            Cache::set("subs", $subs);
+        }
+        return response()->json($subs);
     }
 
     /**
@@ -24,6 +32,7 @@ class SubscriptionController extends Controller
         // input is validated using StoreSubscriptionRequest::class
         $subscription = new Subscription($request->only("user_id", "website_id"));
         $subscription->save();
+        Cache::delete("subs");
         return response(status: 201);
     }
 
@@ -41,6 +50,7 @@ class SubscriptionController extends Controller
     public function destroy(Subscription $subscription)
     {
         $subscription->delete();
+        Cache::delete("subs");
         return response(status:204);
     }
 }
