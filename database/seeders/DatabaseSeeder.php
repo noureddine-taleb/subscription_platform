@@ -11,10 +11,15 @@ class DatabaseSeeder extends Seeder
     /**
      * Seed the application's database.
      */
-    public function run(WebsiteSeeder $website_seeder, UserSeeder $user_seeder, PostSeeder $post_seeder): void
+    public function run(WebsiteSeeder $website_seeder, 
+                        UserSeeder $user_seeder, 
+                        PostSeeder $post_seeder,
+                        SubscriptionSeeder $subs_seeder,
+    ): void
     {
         $website_seeder->run();
         $user_seeder->run();
         $post_seeder->run();
+        $subs_seeder->run();
     }
 }

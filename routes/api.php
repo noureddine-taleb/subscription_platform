@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\SubscriptionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -17,4 +18,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::resource("posts", PostController::class)->except([
     "edit", "create"
+]);
+
+Route::resource("subscription", SubscriptionController::class)->except([
+    "edit", "create", "update"
 ]);
