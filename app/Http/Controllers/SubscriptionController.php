@@ -14,13 +14,9 @@ class SubscriptionController extends Controller
      */
     public function index(Cache $cache)
     {
-        $subs = [];
-        if ($cache->has("subs")) {
-            $subs = $cache->get("subs");
-        } else {
-            $subs = Subscription::all();
-            $cache->set("subs", $subs);
-        }
+        $subs = $cache->remember("subs", null, function() {
+            return Subscription::all();
+        });
         return response()->json($subs);
     }
 

@@ -14,13 +14,9 @@ class PostController extends Controller
      */
     public function index(Cache $cache)
     {
-        $posts = [];
-        if ($cache->has("posts")) {
-            $posts = $cache->get("posts");
-        } else {
-            $posts = Post::all();
-            $cache->set("posts", $posts);
-        }
+        $posts = $cache->remember("posts", null, function() {
+            return Post::all();
+        });
         return response()->json($posts);
     }
 
