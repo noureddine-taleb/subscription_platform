@@ -15,6 +15,7 @@ composer install
 ### c. set .env
 
 add the appropriate database and user/password to your .env file. add redis and email configurations. set `QUEUE_CONNECTION` to `database`.
+note that if you added real email configs make sure to uncomment the line `Mail::to($sub->user)->send(new NewPostEmail($event->post));` in `SendEmailNotification.php` and in `SendEmailCmd.php`.
 
 ## to run the app
 
