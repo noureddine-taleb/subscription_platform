@@ -5,21 +5,21 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreSubscriptionRequest;
 use App\Http\Requests\UpdateSubscriptionRequest;
 use App\Models\Subscription;
-use Illuminate\Support\Facades\Cache;
+use Illuminate\Contracts\Cache\Repository as Cache;
 
 class SubscriptionController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Cache $cache)
     {
         $subs = [];
-        if (Cache::has("subs")) {
-            $subs = Cache::get("subs");
+        if ($cache->has("subs")) {
+            $subs = $cache->get("subs");
         } else {
             $subs = Subscription::all();
-            Cache::set("subs", $subs);
+            $cache->set("subs", $subs);
         }
         return response()->json($subs);
     }
@@ -27,12 +27,12 @@ class SubscriptionController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreSubscriptionRequest $request)
+    public function store(StoreSubscriptionRequest $request, Cache $cache)
     {
         // input is validated using StoreSubscriptionRequest::class
         $subscription = new Subscription($request->only("user_id", "website_id"));
         $subscription->save();
-        Cache::delete("subs");
+        $cache->delete("subs");
         return response(status: 201);
     }
 
@@ -47,10 +47,10 @@ class SubscriptionController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Subscription $subscription)
+    public function destroy(Subscription $subscription, Cache $cache)
     {
         $subscription->delete();
-        Cache::delete("subs");
+        $cache->delete("subs");
         return response(status:204);
     }
 }

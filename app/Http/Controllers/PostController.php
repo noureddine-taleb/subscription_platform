@@ -6,21 +6,20 @@ use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Models\Post;
 use App\Providers\NewPostEvent;
-use Illuminate\Support\Facades\Cache;
-
+use Illuminate\Contracts\Cache\Repository as Cache;
 class PostController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Cache $cache)
     {
         $posts = [];
-        if (Cache::has("posts")) {
-            $posts = Cache::get("posts");
+        if ($cache->has("posts")) {
+            $posts = $cache->get("posts");
         } else {
             $posts = Post::all();
-            Cache::set("posts", $posts);
+            $cache->set("posts", $posts);
         }
         return response()->json($posts);
     }
@@ -28,13 +27,13 @@ class PostController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StorePostRequest $request)
+    public function store(StorePostRequest $request, Cache $cache)
     {
         // input is validated using StorePostRequest::class
         $post = new Post($request->all());
         $post->save();
         NewPostEvent::dispatch($post);
-        Cache::delete("posts");
+        $cache->delete("posts");
         return response(status: 201);
     }
 
@@ -50,20 +49,20 @@ class PostController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdatePostRequest $request, Post $post)
+    public function update(UpdatePostRequest $request, Post $post, Cache $cache)
     {
         //
-        Cache::delete("posts");
+        $cache->delete("posts");
         $post->update($request->only('title', 'desc'));
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Post $post)
+    public function destroy(Post $post, Cache $cache)
     {
         $post->delete();
-        Cache::delete("posts");
+        $cache->delete("posts");
         return response(status:204);
     }
 }
