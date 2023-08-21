@@ -17,8 +17,8 @@ class SubscriptionFactory extends Factory
     public function definition(): array
     {
         return [
-            "website_id" => fake()->numberBetween(1, 5),
-            "user_id" => fake()->numberBetween(1, 2),
+            "website_id" => fake()->unique()->numberBetween(1, 5),
+            "user_id" => fake()->unique()->numberBetween(1, 2),
         ];
     }
 }

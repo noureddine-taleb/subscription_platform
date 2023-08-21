@@ -14,9 +14,12 @@ class PostController extends Controller
      */
     public function index(Cache $cache)
     {
-        $posts = $cache->remember("posts", null, function() {
-            return Post::all();
+        $page = request()->has('page') ? request()->get('page') : 1;
+
+        $posts = $cache->tags("posts")->remember('page_'.$page, null, function () {
+            return Post::paginate();
         });
+
         return response()->json($posts);
     }
 
@@ -29,7 +32,7 @@ class PostController extends Controller
         $post = new Post($request->all());
         $post->save();
         NewPostEvent::dispatch($post);
-        $cache->delete("posts");
+        $cache->tags("posts")->flush();
         return response(status: 201);
     }
 
@@ -48,7 +51,7 @@ class PostController extends Controller
     public function update(UpdatePostRequest $request, Post $post, Cache $cache)
     {
         //
-        $cache->delete("posts");
+        $cache->tags("posts")->flush();
         $post->update($request->only('title', 'desc'));
     }
 
@@ -58,7 +61,7 @@ class PostController extends Controller
     public function destroy(Post $post, Cache $cache)
     {
         $post->delete();
-        $cache->delete("posts");
+        $cache->tags("posts")->flush();
         return response(status:204);
     }
 }

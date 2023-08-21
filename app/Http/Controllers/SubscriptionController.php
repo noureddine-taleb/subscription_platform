@@ -14,9 +14,12 @@ class SubscriptionController extends Controller
      */
     public function index(Cache $cache)
     {
-        $subs = $cache->remember("subs", null, function() {
-            return Subscription::all();
+        $page = request()->has('page') ? request()->get('page') : 1;
+
+        $subs = $cache->tags("subs")->remember('page_'.$page, null, function() {
+            return Subscription::paginate();
         });
+
         return response()->json($subs);
     }
 
@@ -28,7 +31,7 @@ class SubscriptionController extends Controller
         // input is validated using StoreSubscriptionRequest::class
         $subscription = new Subscription($request->only("user_id", "website_id"));
         $subscription->save();
-        $cache->delete("subs");
+        $cache->tags("subs")->flush();
         return response(status: 201);
     }
 
@@ -46,7 +49,7 @@ class SubscriptionController extends Controller
     public function destroy(Subscription $subscription, Cache $cache)
     {
         $subscription->delete();
-        $cache->delete("subs");
+        $cache->tags("subs")->flush();
         return response(status:204);
     }
 }

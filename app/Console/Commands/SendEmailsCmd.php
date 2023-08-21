@@ -8,6 +8,7 @@ use App\Models\Subscription;
 use App\Models\Website;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
+use Ramsey\Collection\Collection;
 
 class SendEmailsCmd extends Command
 {
@@ -34,18 +35,23 @@ class SendEmailsCmd extends Command
          * note that this might not always work, because the email notification
          * might already been sent when the post is created. check SendEmailNotification::class
         */
-        foreach (Subscription::all() as $sub) {
-            foreach ($sub->website->posts as $post) {
-                if (Notification::where("user_id", $sub->user_id)->where("post_id", $post->id)->count() == 0) {
-                    $notification = new Notification();
-                    $notification->user_id = $sub->user_id;
-                    $notification->post_id = $post->id;
-                    $notification->save();
-                    error_log("Email is Sent to:".$sub->user);
-                    // to send mail
-                    // Mail::to($sub->user)->send(new NewPostEmail($event->post));
+        error_log("subs: ".Subscription::all());
+        Subscription::chunk(200, function (Collection $subs) {
+
+            foreach ($subs as $sub) {
+                foreach ($sub->website->posts->cursor() as $post) {
+                    if (Notification::where("user_id", $sub->user_id)->where("post_id", $post->id)->count() == 0) {
+                        $notification = new Notification();
+                        $notification->user_id = $sub->user_id;
+                        $notification->post_id = $post->id;
+                        $notification->save();
+                        error_log("Email is Sent to:".$sub->user);
+                        // to send mail
+                        // Mail::to($sub->user)->send(new NewPostEmail($event->post));
+                    }
                 }
             }
-        }
+        });
+
     }
 }

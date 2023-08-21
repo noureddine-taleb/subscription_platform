@@ -32,7 +32,7 @@ class SendEmailNotification implements ShouldQueue
         /**
          * new post is created: we send an email here as well asynchronesly
         */
-        foreach ($event->post->website->subs as $sub) {
+        foreach ($event->post->website->subs->cursor() as $sub) {
             error_log("Email is Sent to:".$sub->user);
             // to send real email
             // Mail::to($sub->user)->send(new NewPostEmail($event->post));
