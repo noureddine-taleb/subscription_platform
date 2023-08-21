@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId("user_id");
             $table->foreignId("website_id");
+            $table->unique(array("user_id", "website_id"));
             $table->foreign("website_id")->references("id")->on("websites");
             $table->foreign("user_id")->references("id")->on("users");
             $table->timestamps();
